@@ -13,7 +13,7 @@ struct OUT {
 int getTime(char *);
 void setData(int,int,char *);
 
-char filename[16][16] = { 
+char filename[16][16] = {
 	"0_尿.csv", "01_糖尿.csv", "02_糖尿.csv", "05_糖尿.csv", "1_糖尿.csv",
 	"2_糖尿.csv", "5_糖尿.csv", "15_糖尿.csv", "0_水.csv", "01_糖水.csv",
 	"02_糖水.csv", "05_糖水.csv", "1_糖水.csv", "2_糖水.csv", "5_糖水.csv",
@@ -25,7 +25,7 @@ int main(){
 	char input[32];
 
 	/* progress input */
-	printf("Is the input filename `data.csv`? \nIf yes press enter; if not input your filename here: "); 
+	printf("Is the input filename `data.csv`? \nIf yes press enter; if not input your filename here: ");
 	fgets(input,32,stdin);
 	if(strlen(input)==1) strcpy(input,"data.csv");
 	else input[strlen(input)]='\0';
@@ -43,15 +43,16 @@ int main(){
 	}
 	fclose(pFile);
 	/* output data */
-	for(int i=0; i<dataHeight; ++i) {
+	int i, j, k;
+	for(i=0; i<dataHeight; ++i) {
 		FILE *pLeft, *pRight;
 		pLeft = fopen(filename[i],"w");
 		pRight = fopen(filename[i+dataHeight/2],"w");
 		if(pFile!=NULL && pRight!=NULL)
-			for(int j=0; j<num; ++j) {
+			for(j=0; j<num; ++j) {
 				fprintf(pLeft, "%d", output[j].time);
 				fprintf(pRight, "%d", output[j+dataHeight/2].time);
-				for(int k=0; k<dataWidth; ++k) { 
+				for(k=0; k<dataWidth; ++k) {
 					fprintf(pLeft, ",%s", output[j].data[i][k]);
 					fprintf(pRight, ",%s", output[j+dataHeight/2].data[i][k]);
 				}
@@ -77,8 +78,8 @@ void setData(int n, int ar, char *s){
 int getTime(char *time){
 	char newTime[timeLen];
 	int len = strlen(time);
-	int hour=0, minute=0, isHour=0;
-	for(int i=1; i<len; ++i){
+	int hour=0, minute=0, isHour=0, i;
+	for(i=1; i<len; ++i){
 		if(time[i]==':'){
 			if(isHour==0) isHour = 1;
 			else break;

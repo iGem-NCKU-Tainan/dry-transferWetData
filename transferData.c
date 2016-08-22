@@ -19,7 +19,7 @@ int main(){
 	char input[32];
 
 	/* progress input */
-	printf("Is the input filename `data.csv`? \nIf yes press enter; if not input your filename here: "); 
+	printf("Is the input filename `data.csv`? \nIf yes press enter; if not input your filename here: ");
 	fgets(input,32,stdin);
 	if(strlen(input)==1) strcpy(input,"data.csv");
 	else input[strlen(input)]='\0';
@@ -38,14 +38,15 @@ int main(){
 	}
 	fclose(pFile);
 	/* output data */
-	for(int i=0; i<dataHeight; ++i) {
+	int i, j, k;
+	for(i=0; i<dataHeight; ++i) {
 		char filename[16] = "0.csv";
 		filename[0]=(char)(i+'A');
 		pFile = fopen(filename,"w");
 		if(pFile!=NULL)
-			for(int j=0; j<num; ++j) {
+			for(j=0; j<num; ++j) {
 				fprintf(pFile, "%d", output[j].time);
-				for(int k=0; k<dataWidth; ++k) 
+				for(k=0; k<dataWidth; ++k)
 					fprintf(pFile, ",%s", output[j].data[i][k]);
 				fprintf(pFile, "\n");
 			}
@@ -67,8 +68,8 @@ void setData(int n, int ar, char *s){
 int getTime(char *time){
 	char newTime[timeLen];
 	int len = strlen(time);
-	int hour=0, minute=0, isHour=0;
-	for(int i=1; i<len; ++i){
+	int hour=0, minute=0, isHour=0, i;
+	for(i=1; i<len; ++i){
 		if(time[i]==':'){
 			if(isHour==0) isHour = 1;
 			else break;
