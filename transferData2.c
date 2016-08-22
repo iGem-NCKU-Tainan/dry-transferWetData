@@ -13,12 +13,19 @@ struct OUT {
 int getTime(char *);
 void setData(int,int,char *);
 
+char filename[16][16] = { 
+	"0_尿.csv", "01_糖尿.csv", "02_糖尿.csv", "05_糖尿.csv", "1_糖尿",
+	"2_糖尿.csv", "5_糖尿.csv", "15_糖尿.csv", "0_水.csv", "01_糖水",
+	"02_糖水.csv", "05_糖水.csv", "1_糖水.csv", "2_糖水.csv", "5_糖水.csv",
+	"15_糖水.csv" };
+
 int main(){
 	/* input data and process */
 	FILE *pFile;
 	pFile = fopen("data.csv","r");
 	char s[lineLen], time[timeLen];
 	int num;
+	if(pFile == NULL) printf("Please put the input file `data.csv` to the same folder.\n");
 	while(fgets(s,lineLen,pFile)!=0) {
 		if(s[0]=='K') {
 			sscanf(s,"%*s %*s %d %s",&num,time);
@@ -30,30 +37,22 @@ int main(){
 	fclose(pFile);
 	/* output data */
 	for(int i=0; i<dataHeight; ++i) {
-		char filename[16] = "0.csv";
-		filename[0]=(char)(i+'A');
-		pFile = fopen(filename,"w");
-		if(pFile!=NULL)
+		FILE *pLeft, *pRight;
+		pLeft = fopen(filename[i],"w");
+		pRight = fopen(filename[i+dataHeight/2],"w");
+		if(pFile!=NULL && pRight!=NULL)
 			for(int j=0; j<num; ++j) {
-				fprintf(pFile, "%d", output[j].time);
-				for(int k=0; k<dataWidth/2; ++k) 
-					fprintf(pFile, ",%s", output[j].data[i][k]);
-				fprintf(pFile, "\n");
+				fprintf(pLeft, "%d", output[j].time);
+				fprintf(pRight, "%d", output[j+dataHeight/2].time);
+				for(int k=0; k<dataWidth; ++k) { 
+					fprintf(pLeft, ",%s", output[j].data[i][k]);
+					fprintf(pRight, ",%s", output[j+dataHeight/2].data[i][k]);
+				}
+				fprintf(pLeft, "\n");
+				fprintf(pRight, "\n");
 			}
-		fclose(pFile);
-	}
-	for(int i=0; i<dataHeight; ++i) {
-		char filename[16] = "0.csv";
-		filename[0]=(char)(i+'I');
-		pFile = fopen(filename,"w");
-		if(pFile!=NULL)
-			for(int j=0; j<num; ++j) {
-				fprintf(pFile, "%d", output[j].time);
-				for(int k=dataWidth/2; k<dataWidth; ++k) 
-					fprintf(pFile, ",%s", output[j].data[i][k]);
-				fprintf(pFile, "\n");
-			}
-		fclose(pFile);
+		fclose(pLeft);
+		fclose(pRight);
 	}
 	return 0;
 }
