@@ -16,7 +16,15 @@ void setData(int,int,char *);
 int main(){
 	/* input data and process */
 	FILE *pFile;
-	pFile = fopen("data.csv","r");
+	char input[32];
+
+	/* progress input */
+	printf("Is the input filename `data.csv`? \nIf yes press enter; if not input your filename here: "); 
+	fgets(input,32,stdin);
+	if(strlen(input)==1) strcpy(input,"data.csv");
+	else input[strlen(input)]='\0';
+
+	pFile = fopen(input,"r");
 	char s[lineLen], time[timeLen];
 	int num;
 	if(pFile == NULL) printf("Please put the input file `data.csv` to the same folder.\n");

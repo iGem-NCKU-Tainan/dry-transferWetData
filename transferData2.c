@@ -14,14 +14,21 @@ int getTime(char *);
 void setData(int,int,char *);
 
 char filename[16][16] = { 
-	"0_尿.csv", "01_糖尿.csv", "02_糖尿.csv", "05_糖尿.csv", "1_糖尿",
-	"2_糖尿.csv", "5_糖尿.csv", "15_糖尿.csv", "0_水.csv", "01_糖水",
+	"0_尿.csv", "01_糖尿.csv", "02_糖尿.csv", "05_糖尿.csv", "1_糖尿.csv",
+	"2_糖尿.csv", "5_糖尿.csv", "15_糖尿.csv", "0_水.csv", "01_糖水.csv",
 	"02_糖水.csv", "05_糖水.csv", "1_糖水.csv", "2_糖水.csv", "5_糖水.csv",
 	"15_糖水.csv" };
 
 int main(){
 	/* input data and process */
 	FILE *pFile;
+	char input[32];
+
+	/* progress input */
+	printf("Is the input filename `data.csv`? \nIf yes press enter; if not input your filename here: "); 
+	fgets(input,32,stdin);
+	if(strlen(input)==1) strcpy(input,"data.csv");
+	else input[strlen(input)]='\0';
 	pFile = fopen("data.csv","r");
 	char s[lineLen], time[timeLen];
 	int num;
