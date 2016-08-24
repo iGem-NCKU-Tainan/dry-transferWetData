@@ -47,14 +47,14 @@ int main(){
 	for(i=0; i<dataHeight; ++i) {
 		FILE *pLeft, *pRight;
 		pLeft = fopen(filename[i],"w");
-		pRight = fopen(filename[i+dataHeight/2],"w");
+		pRight = fopen(filename[i+dataHeight],"w");
 		if(pFile!=NULL && pRight!=NULL)
 			for(j=0; j<num; ++j) {
 				fprintf(pLeft, "%d", output[j].time);
-				fprintf(pRight, "%d", output[j+dataHeight/2].time);
-				for(k=0; k<dataWidth; ++k) {
+				fprintf(pRight, "%d", output[j].time);
+				for(k=0; k<dataWidth/2; ++k) {
 					fprintf(pLeft, ",%s", output[j].data[i][k]);
-					fprintf(pRight, ",%s", output[j+dataHeight/2].data[i][k]);
+					fprintf(pRight, ",%s", output[j].data[i][k+dataWidth/2]);
 				}
 				fprintf(pLeft, "\n");
 				fprintf(pRight, "\n");
