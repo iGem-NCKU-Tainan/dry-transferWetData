@@ -41,13 +41,17 @@ int main(){
 	int i, j, k;
 	char filename[32] = "transferDATA2.csv";
 	pFile = fopen(filename, "w");
-	for(i=0; i<num; ++i) fprintf(pFile, "%d,", output[i].time);
-	fprintf(pFile,"\b\n");
+	 // time row
+	fprintf(pFile,"time");
+	for(i=0; i<num; ++i) fprintf(pFile, ",%d", output[i].time);
+	fprintf(pFile,"\n");
+	 // data row
 	for(i=0; i<dataHeight; ++i)
 		for(j=0; j<dataWidth; ++j) {
+			fprintf(pFile,"%c%d", i+'A', j+1);
 			for(k=0; k<num; ++k)
-				fprintf(pFile, "%s,", output[k].data[i][j]);
-			fprintf(pFile, "\b\n");
+				fprintf(pFile, ",%s", output[k].data[i][j]);
+			fprintf(pFile, "\n");
 		}
 	fclose(pFile);
 	return 0;
