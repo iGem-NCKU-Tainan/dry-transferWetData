@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <string.h>
-#define dataWidth 12
-#define dataHeight 8
+#include <stdlib.h>
 #define lineLen 1024
 #define timeLen 16
+#define maxDataHeight 24
+#define maxDataWidth 32
 
 struct OUT {
 	int time;
-	char data[dataHeight][dataWidth][16];
+	char data[maxDataHeight][maxDataWidth][16];
 } output[100000];
 
 int getTime(char *);
 void setData(int,int,char *);
+int dataHeight, dataWidth;
 
 int main(){
 	/* input data and process */
@@ -19,15 +21,38 @@ int main(){
 	char input[32];
 
 	/* progress input */
-	printf("Is the input filename `DATA2.csv`? \nIf yes press enter; if not input your filename here: ");
+	printf("Input the filename (default: `DATA2.csv`): ");
 	fgets(input,32,stdin);
 	if(strlen(input)==1) strcpy(input,"DATA2.csv");
 	else input[strlen(input)]='\0';
-
 	pFile = fopen(input,"r");
+	if(pFile == NULL) {
+		printf("Please put the input csv file to the same folder.\n");
+		exit(0);
+	}
+
+	/* progress dataWidth */
+	printf("Input data width (default: 12): ");
+	fgets(input,32,stdin);
+	if(strlen(input)==1) dataWidth=12;
+	else {
+		int i;
+		for(i=0, dataWidth=0; i<strlen(input)-1; ++i)
+			dataWidth=dataWidth*10+input[i]-'0';
+	}
+
+	/* progress dataHeight */
+	printf("Input data height (default: 8): ");
+	fgets(input,32,stdin);
+	if(strlen(input)==1) dataHeight=8;
+	else {
+		int i;
+		for(i=0, dataHeight=0; i<strlen(input)-1; ++i) 
+			dataHeight=dataHeight*10+input[i]-'0';
+	}
+
 	char s[lineLen], time[timeLen];
 	int num;
-	if(pFile == NULL) printf("Please put the input csv file to the same folder.\n");
 	while(fgets(s,lineLen,pFile)!=0) {
 		if(s[0]=='K') {
 			sscanf(s,"%*s %*s %d %s",&num,time);
@@ -60,11 +85,11 @@ int main(){
 void setData(int n, int ar, char *s){
 	char *pch;
 	int width = 0;
-	pch = strtok(s,",");
+	pch = strtok(s,",\n\r");
 	do {
-		pch = strtok(NULL,",");
+		pch = strtok(NULL,",\n\r");
 		strcpy(output[n].data[ar][width++],pch);
-	} while(pch!=NULL && width<12);
+	} while(pch!=NULL && width<dataWidth);
 }
 
 int getTime(char *time){
