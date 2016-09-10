@@ -24,7 +24,7 @@ int main(){
 	printf("Input the filename (default: `DATA2.csv`): ");
 	fgets(input,32,stdin);
 	if(strlen(input)==1) strcpy(input,"DATA2.csv");
-	else input[strlen(input)]='\0';
+	else input[strlen(input)-1]='\0';
 	pFile = fopen(input,"r");
 	if(pFile == NULL) {
 		printf("Please put the input csv file to the same folder.\n");
