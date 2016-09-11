@@ -13,7 +13,7 @@ struct OUT {
 
 int getTime(char *);
 void setData(int,int,char *);
-int dataHeight, dataWidth;
+int dataHeight = 0, dataWidth = 0;
 
 int main(){
 	/* input data and process */
@@ -21,7 +21,7 @@ int main(){
 	char input[32];
 
 	/* progress input */
-	printf("Input the filename (default: `DATA2.csv`): ");
+	printf("Input filename (default: `DATA2.csv`): ");
 	fgets(input,32,stdin);
 	if(strlen(input)==1) strcpy(input,"DATA2.csv");
 	else input[strlen(input)-1]='\0';
@@ -31,41 +31,34 @@ int main(){
 		exit(0);
 	}
 
-	/* progress dataWidth */
-	printf("Input data width (default: 12): ");
-	fgets(input,32,stdin);
-	if(strlen(input)==1) dataWidth=12;
-	else {
-		int i;
-		for(i=0, dataWidth=0; i<strlen(input)-1; ++i)
-			dataWidth=dataWidth*10+input[i]-'0';
-	}
-
-	/* progress dataHeight */
-	printf("Input data height (default: 8): ");
-	fgets(input,32,stdin);
-	if(strlen(input)==1) dataHeight=8;
-	else {
-		int i;
-		for(i=0, dataHeight=0; i<strlen(input)-1; ++i) 
-			dataHeight=dataHeight*10+input[i]-'0';
-	}
-
 	char s[lineLen], time[timeLen];
 	int num;
 	while(fgets(s,lineLen,pFile)!=0) {
-		if(s[0]=='K') {
+		if(s[0]=='K' && s[1]=='i') {
 			sscanf(s,"%*s %*s %d %s",&num,time);
 			output[num-1].time = getTime(time);
 		}
-		else if(s[0]>='A' && s[0]<='H')
+		else if(s[0]>='A' && s[0]<='Z') {
 			setData(num-1,s[0]-'A',s);
+			if(s[0]-'A'>dataHeight) dataHeight = s[0]-'A';
+        }
 	}
 	fclose(pFile);
+	++dataHeight;
+
+	/* progress output */
+	printf("Output filename (default: `transferDATA2.csv`): ");
+	fgets(input,32,stdin);
+	if(strlen(input)==1) strcpy(input,"transferDATA2.csv");
+	else input[strlen(input)-1]='\0';
+	pFile = fopen(input,"w");
+	if(pFile == NULL) {
+		printf("Cannot create the file...\n");
+		exit(0);
+	}
+
 	/* output data */
 	int i, j, k;
-	char filename[32] = "transferDATA2.csv";
-	pFile = fopen(filename, "w");
 	 // time row
 	fprintf(pFile,"time");
 	for(i=0; i<num; ++i) fprintf(pFile, ",%d", output[i].time);
@@ -79,6 +72,8 @@ int main(){
 			fprintf(pFile, "\n");
 		}
 	fclose(pFile);
+
+	printf("Done!\n");
 	return 0;
 }
 
@@ -86,10 +81,12 @@ void setData(int n, int ar, char *s){
 	char *pch;
 	int width = 0;
 	pch = strtok(s,",\n\r");
-	do {
-		pch = strtok(NULL,",\n\r");
+	pch = strtok(NULL,",\n\r");
+	while(pch!=NULL) {
 		strcpy(output[n].data[ar][width++],pch);
-	} while(pch!=NULL && width<dataWidth);
+		pch = strtok(NULL,",\n\r");
+	}
+	if(!dataWidth) dataWidth = width;
 }
 
 int getTime(char *time){
